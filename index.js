@@ -19,7 +19,7 @@ const ChannelSchema = new mongoose.Schema({
   link: String,
   description: String,
   profile: String,
-  type: { type: String, default: '' }
+  problem: { type: String, default: '' }
 });
 
 // Define a model
