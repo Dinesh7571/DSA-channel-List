@@ -1,22 +1,25 @@
 const express = require('express');
-const cors= require('cors')
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 // Initialize express app
 const app = express();
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://Dinesh:Dineshk123@cluster0.zzhdnr8.mongodb.net/').then(() => console.log('MongoDB connected')).catch(err => console.log(err));
+mongoose.connect('mongodb+srv://Dinesh:Dineshk123@cluster0.zzhdnr8.mongodb.net/')
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
 
-// Define a schema
+// Define a schema with an additional field "type"
 const ChannelSchema = new mongoose.Schema({
   channelName: String,
   link: String,
   description: String,
-  profile: String
+  profile: String,
+  type: { type: String, default: '' }
 });
 
 // Define a model
@@ -38,6 +41,16 @@ app.get('/channels', async (req, res) => {
   try {
     const channels = await Channel.find();
     res.status(200).json(channels);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// DELETE endpoint to delete all channels
+app.delete('/channels', async (req, res) => {
+  try {
+    await Channel.deleteMany({});
+    res.status(200).send('All channels deleted successfully');
   } catch (err) {
     res.status(500).send(err.message);
   }
